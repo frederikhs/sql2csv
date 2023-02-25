@@ -1,6 +1,7 @@
 package sql2csv
 
 import (
+	"context"
 	"encoding/csv"
 	"fmt"
 	"github.com/jackc/pgx/v5"
@@ -8,13 +9,14 @@ import (
 )
 
 // WriteQuery writes the results of executing the query to a csv file at the path given
-func (c *Connection) WriteQuery(query *Query, path string) error {
-	rows, err := c.db.Query(query.ctx, query.sql, query.args...)
-
+func (c *Connection) WriteQuery(ctx context.Context, query *Query, path string, loggerFn func(ln string)) error {
+	loggerFn("executing query")
+	rows, err := c.db.Query(ctx, query.sql, query.args...)
 	if err != nil {
 		return err
 	}
 
+	loggerFn("creating output file: " + path)
 	file, err := os.Create(path)
 	if err != nil {
 		return fmt.Errorf("failed to open file: %v", err)
@@ -22,7 +24,8 @@ func (c *Connection) WriteQuery(query *Query, path string) error {
 
 	w := csv.NewWriter(file)
 
-	err = writeRows(w, rows)
+	loggerFn("writing data")
+	err = writeRows(w, rows, loggerFn)
 	if err != nil {
 		return fmt.Errorf("failed writing rows: %v", err)
 	}
@@ -42,11 +45,13 @@ func (c *Connection) WriteQuery(query *Query, path string) error {
 		return fmt.Errorf("failed closing rows: %v", err)
 	}
 
+	loggerFn("done")
+
 	return nil
 }
 
 // writeRows writes all the rows from the results into the writer
-func writeRows(w *csv.Writer, rows pgx.Rows) error {
+func writeRows(w *csv.Writer, rows pgx.Rows, loggerFn func(ln string)) error {
 	columns := extractColumns(rows)
 
 	// write header line of column name
@@ -55,7 +60,9 @@ func writeRows(w *csv.Writer, rows pgx.Rows) error {
 		return err
 	}
 
+	i := 0
 	for rows.Next() {
+		i++
 		rv, err := rows.Values()
 		if err != nil {
 			return err
@@ -71,6 +78,8 @@ func writeRows(w *csv.Writer, rows pgx.Rows) error {
 			return err
 		}
 	}
+
+	loggerFn(fmt.Sprintf("wrote %d lines", i))
 
 	return nil
 }

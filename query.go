@@ -1,7 +1,6 @@
 package sql2csv
 
 import (
-	"context"
 	"errors"
 	"strings"
 )
@@ -13,19 +12,17 @@ var badKeyWords = []string{
 }
 
 type Query struct {
-	ctx  context.Context
 	sql  string
 	args []any
 }
 
 // NewQuery create a new query object for later use when executing a query against the database
-func NewQuery(ctx context.Context, sql string, args ...any) (*Query, error) {
+func NewQuery(sql string, args ...any) (*Query, error) {
 	if !checkIsSelect(sql) {
 		return nil, errors.New("query is not a select statement")
 	}
 
 	return &Query{
-		ctx:  ctx,
 		sql:  sql,
 		args: args,
 	}, nil
