@@ -41,7 +41,7 @@ func main() {
 	}
 
 	// writes results to ./results.csv
-	err = conn.WriteQuery(query, "results")
+	err = conn.WriteQuery(query, "results.csv")
 	if err != nil {
 		panic(err)
 	}
