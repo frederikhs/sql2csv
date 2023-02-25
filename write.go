@@ -15,7 +15,7 @@ func (c *Connection) WriteQuery(query *Query, path string) error {
 		return err
 	}
 
-	file, err := os.Create(fmt.Sprintf("%s.csv", path))
+	file, err := os.Create(path)
 	if err != nil {
 		return fmt.Errorf("failed to open file: %v", err)
 	}
