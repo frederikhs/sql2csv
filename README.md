@@ -1,9 +1,14 @@
 # sql2csv
 
+[![GoDoc](https://godoc.org/github.com/frederikhs/sql2csv?status.svg)](https://godoc.org/github.com/frederikhs/sql2csv)
 [![Quality](https://goreportcard.com/badge/github.com/frederikhs/sql2csv)](https://goreportcard.com/report/github.com/frederikhs/sql2csv)
 [![Test](https://github.com/frederikhs/sql2csv/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/frederikhs/sql2csv/actions/workflows/test.yml)
+[![Release](https://img.shields.io/github/v/release/frederikhs/sql2csv.svg)](https://github.com/frederikhs/sql2csv/releases/latest)
+[![License](https://img.shields.io/github/license/frederikhs/sql2csv)](LICENSE)
 
 *Go library for generating csv files based on SQL queries*
+
+Only supporting PostgreSQL
 
 ## Usage
 
