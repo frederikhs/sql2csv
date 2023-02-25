@@ -35,7 +35,10 @@ func main() {
 	}
 	defer conn.Close(context.Background())
 
-	query := sql2csv.NewQuery(context.Background(), "SELECT * FROM public.users LIMIT $1", 10)
+	query, err := sql2csv.NewQuery(context.Background(), "SELECT * FROM public.users LIMIT $1", 10)
+	if err != nil {
+		panic(err)
+	}
 
 	// writes results to ./results.csv
 	err = conn.WriteQuery(query, "results")
