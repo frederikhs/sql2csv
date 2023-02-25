@@ -29,7 +29,7 @@ func TestInterfaceToString(t *testing.T) {
 	for _, test := range tests {
 		r := interfaceToString(test.i)
 		if r != test.s {
-			t.Fatalf("expected: \"%s\", got \"%s\" for type: %v", test.s, r, reflect.TypeOf(test.i))
+			t.Errorf("expected: \"%s\", got \"%s\" for type: %v", test.s, r, reflect.TypeOf(test.i))
 		}
 	}
 }

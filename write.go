@@ -48,30 +48,25 @@ func (c *Connection) WriteQuery(query *Query, path string) error {
 // writeRows writes all the rows from the results into the writer
 func writeRows(w *csv.Writer, rows pgx.Rows) error {
 	columns := extractColumns(rows)
-	valuePtrs := createTypeMap(rows, len(columns))
 
+	// write header line of column name
 	err := w.Write(columns)
 	if err != nil {
 		return err
 	}
 
-	err = rows.Scan(valuePtrs...)
-	if err != nil {
-		return err
-	}
-
-	err = w.Write(rowToStrings(valuePtrs, columns))
-	if err != nil {
-		return err
-	}
-
 	for rows.Next() {
-		err = rows.Scan(valuePtrs...)
+		rv, err := rows.Values()
 		if err != nil {
 			return err
 		}
 
-		err = w.Write(rowToStrings(valuePtrs, columns))
+		var resultRow []string
+		for _, raw := range rv {
+			resultRow = append(resultRow, interfaceToString(raw))
+		}
+
+		err = w.Write(resultRow)
 		if err != nil {
 			return err
 		}
