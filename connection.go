@@ -10,12 +10,16 @@ type Connection struct {
 	db *pgx.Conn
 }
 
+func NewConnectionString(user, pass, host, port, dbname string) string {
+	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, pass, host, port, dbname)
+	//	postgres://user:pass@host:port/dbname
+}
+
 // NewConnection creates a new connection object
-func NewConnection(ctx context.Context, user, pass, host, port, dbname string) (*Connection, error) {
-	urlExample := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, pass, host, port, dbname)
-	conn, err := pgx.Connect(ctx, urlExample)
+func NewConnection(ctx context.Context, connectiongString string) (*Connection, error) {
+	conn, err := pgx.Connect(ctx, connectiongString)
 	if err != nil {
-		return nil, fmt.Errorf("unable to connect to database: %v\n", err)
+		return nil, fmt.Errorf("unable to connect to database: %v", err)
 	}
 
 	return &Connection{db: conn}, nil

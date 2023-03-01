@@ -2,7 +2,10 @@ module github.com/frederikhs/sql2csv
 
 go 1.20
 
-require github.com/jackc/pgx/v5 v5.3.0
+require (
+	github.com/jackc/pgx/v5 v5.3.0
+	github.com/tg/pgpass v0.0.0-20160209162002-acc398fbd689
+)
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
